@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GetFolder-response.xml</file>
+    </qresource>
+</RCC>
