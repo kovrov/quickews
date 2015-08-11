@@ -10,19 +10,6 @@
 
 namespace {
 
-QNetworkRequest makeNetworkRequest(const QUrl &url)
-{
-    QNetworkRequest req(url);
-    req.setRawHeader("User-Agent", "QuickEWS/0.1");
-    req.setRawHeader("Content-Type", "text/xml");
-    req.setRawHeader("Accept", "text/xml; charset=utf-8");
-    QSslConfiguration config;
-    config.setProtocol(QSsl::AnyProtocol);
-    req.setSslConfiguration(config);
-    return req;
-}
-
-
 QByteArray GetFolder(const QString &distinguishedFolderId, const QString &mailbox)
 {
     QByteArray data;

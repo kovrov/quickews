@@ -5,4 +5,6 @@
 
 QNetworkAccessManager *manager();
 
+QNetworkRequest makeNetworkRequest(const QUrl &url);
+
 #endif // NETWORKACCESSMANAGER_H
