@@ -73,6 +73,12 @@ QByteArray GetFolder(const QString &distinguishedFolderId, const QString &mailbo
 
 namespace quickews {
 
+
+Folder::Folder(QObject *parent) :
+    QObject (parent)
+{
+}
+
 Folder::Folder(const QString &distinguishedFolderId, const QString &mailbox, QObject *parent) :
     QObject (parent),
     m_distinguishedFolderId (distinguishedFolderId),

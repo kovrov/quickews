@@ -3,6 +3,7 @@
 
 
 #include <QtCore/QMap>
+#include <QtCore/QString>
 
 namespace ews {
 

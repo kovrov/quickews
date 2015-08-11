@@ -1,0 +1,3 @@
+module EWS
+plugin quickews
+

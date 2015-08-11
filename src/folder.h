@@ -12,6 +12,7 @@ class Folder : public QObject
     Q_PROPERTY (QString folderId READ folderId NOTIFY folderIdChanged)
 
 public:
+    explicit Folder(QObject *parent = nullptr);
     explicit Folder(const QString &distinguishedFolderId, const QString &mailbox, QObject *parent = nullptr);
     QString folderId() { return m_id; }
 
