@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>GetFolder-response.xml</file>
+        <file>GetUserAvailability-response.xml</file>
     </qresource>
 </RCC>

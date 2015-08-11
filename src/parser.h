@@ -15,6 +15,12 @@ namespace ews {
         virtual ~AbstractResponse() = default;
     };
 
+    struct CalendarEvent
+    {
+        QDateTime startTime;
+        QDateTime endTime;
+    };
+
     struct CalendarItem
     {
         QString id;
@@ -38,6 +44,12 @@ namespace ews {
     {
         GetFolderResponse(const QByteArray &data);
         QList<Folder> folders;
+    };
+
+    struct GetUserAvailabilityResponse : public AbstractResponse
+    {
+        GetUserAvailabilityResponse(const QByteArray &data);
+        QList<CalendarEvent> events;
     };
 
 } // namespace ews

@@ -9,6 +9,7 @@ class TestParser : public QObject
 
 private Q_SLOTS:
     void getFolderResponse();
+    void getUserAvailabilityResponse();
 };
 
 void TestParser::getFolderResponse()
@@ -19,6 +20,17 @@ void TestParser::getFolderResponse()
     QCOMPARE (resp.response, ews::NoError);
     QCOMPARE (resp.folders.count(), 1);
     QCOMPARE (resp.folders.first().folderId, QStringLiteral("AQApA="));
+}
+
+void TestParser::getUserAvailabilityResponse()
+{
+    QFile f (":/GetUserAvailability-response.xml");
+    f.open(QIODevice::ReadOnly);
+    ews::GetUserAvailabilityResponse resp (f.readAll());
+    QCOMPARE (resp.response, ews::NoError);
+    QCOMPARE (resp.events.count(), 4);
+    QCOMPARE (resp.events.first().startTime, QDateTime::fromString(QStringLiteral("2015-08-10T11:30:00"), Qt::ISODate));
+    QCOMPARE (resp.events.first().endTime, QDateTime::fromString(QStringLiteral("2015-08-10T12:00:00"), Qt::ISODate));
 }
 
 QTEST_APPLESS_MAIN (TestParser)
