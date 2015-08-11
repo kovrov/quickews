@@ -17,6 +17,7 @@ namespace ews {
 
     struct CalendarEvent
     {
+        BusyType busyType = NoData;
         QDateTime startTime;
         QDateTime endTime;
     };

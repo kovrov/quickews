@@ -2,6 +2,14 @@
 
 namespace ews {
 
+QMap<QString, BusyType> busyTypes {
+    {"Free", Free},
+    {"Tentative", Tentative},
+    {"Busy", Busy},
+    {"OOF", OOF},
+    {"NoData", NoData}
+};
+
 QMap<QString, ResponseCode> responseCodes {
     {"NoError", NoError},
     {"ErrorAccessDenied", ErrorAccessDenied},

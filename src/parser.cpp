@@ -5,6 +5,7 @@
 namespace parser {
 
 void body(QXmlStreamReader &xml, ews::AbstractResponse *res);
+void busyType(QXmlStreamReader &xml, ews::CalendarEvent *res);
 void calendarEvent(QXmlStreamReader &xml, ews::GetUserAvailabilityResponse *res);
 void calendarEventArray(QXmlStreamReader &xml, ews::GetUserAvailabilityResponse *res);
 void calendarFolder(QXmlStreamReader &xml, ews::Folder *res);
@@ -72,12 +73,23 @@ void body(QXmlStreamReader &xml, ews::AbstractResponse *res)
     }
 }
 
+void busyType(QXmlStreamReader &xml, ews::CalendarEvent *res)
+{
+    Q_ASSERT (xml.name().MATCH("BusyType"));
+    res->busyType = ews::busyTypes.value(xml.readElementText(), ews::NoData);
+    if (!xml.isEndElement()) {
+        xml.skipCurrentElement();
+    }
+}
+
 void calendarEvent(QXmlStreamReader &xml, ews::GetUserAvailabilityResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("CalendarEvent"));
     ews::CalendarEvent event;
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("StartTime")) {
+        if (xml.name().MATCH("BusyType")) {
+            busyType(xml, &event);
+        } else if (xml.name().MATCH("StartTime")) {
             startTime(xml, &event);
         } else if (xml.name().MATCH("EndTime")) {
             endTime(xml, &event);

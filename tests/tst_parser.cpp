@@ -31,6 +31,10 @@ void TestParser::getUserAvailabilityResponse()
     QCOMPARE (resp.events.count(), 4);
     QCOMPARE (resp.events.first().startTime, QDateTime::fromString(QStringLiteral("2015-08-10T11:30:00"), Qt::ISODate));
     QCOMPARE (resp.events.first().endTime, QDateTime::fromString(QStringLiteral("2015-08-10T12:00:00"), Qt::ISODate));
+    QCOMPARE (resp.events.first().busyType, ews::Busy);
+    QCOMPARE (resp.events.last().startTime, QDateTime::fromString(QStringLiteral("2015-08-10T16:30:00"), Qt::ISODate));
+    QCOMPARE (resp.events.last().endTime, QDateTime::fromString(QStringLiteral("2015-08-10T17:00:00"), Qt::ISODate));
+    QCOMPARE (resp.events.last().busyType, ews::Busy);
 }
 
 QTEST_APPLESS_MAIN (TestParser)

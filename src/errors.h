@@ -7,6 +7,16 @@
 
 namespace ews {
 
+enum BusyType {
+    Free,
+    Tentative,
+    Busy,
+    OOF,
+    NoData
+};
+
+extern QMap<QString, BusyType> busyTypes;
+
 enum ResponseCode {
     NoError,
     ErrorAccessDenied,
