@@ -39,8 +39,9 @@ ews::GetFolderResponse::GetFolderResponse(const QByteArray &data)
     QXmlStreamReader xml(data);
     Q_ASSERT (xml.tokenType() == QXmlStreamReader::NoToken);
     xml.readNextStartElement();
-    if (xml.name() == QStringLiteral("Envelope"))
+    if (xml.name() == QStringLiteral("Envelope")) {
         parser::envelope(xml, this);
+    }
 }
 
 ews::GetUserAvailabilityResponse::GetUserAvailabilityResponse(const QByteArray &data)
@@ -103,9 +104,9 @@ void calendarFolder(QXmlStreamReader &xml, ews::Folder *res)
 {
     Q_ASSERT (xml.name().MATCH("CalendarFolder"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("FolderId"))
+        if (xml.name().MATCH("FolderId")) {
             res->folderId = xml.attributes().value("Id").toString();
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -116,15 +117,15 @@ void calendarItem(QXmlStreamReader &xml, ews::FindItemResponse *res)
     ews::CalendarItem item;
     Q_ASSERT (xml.name().MATCH("CalendarItem"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("Subject"))
+        if (xml.name().MATCH("Subject")) {
             subject(xml, &item);
-        else if (xml.name().MATCH("Start"))
+        } else if (xml.name().MATCH("Start")) {
             start(xml, &item);
-        else if (xml.name().MATCH("End"))
+        } else if (xml.name().MATCH("End")) {
             end(xml, &item);
-        else if (xml.name().MATCH("Location"))
+        } else if (xml.name().MATCH("Location")) {
             location(xml, &item);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -153,9 +154,9 @@ void envelope(QXmlStreamReader &xml, ews::AbstractResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("Envelope"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("Body"))
+        if (xml.name().MATCH("Body")) {
             body(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -165,9 +166,9 @@ void findItemResponse(QXmlStreamReader &xml, ews::FindItemResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("FindItemResponse"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("ResponseMessages"))
+        if (xml.name().MATCH("ResponseMessages")) {
             responseMessages(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -177,9 +178,9 @@ void findItemResponseMessage(QXmlStreamReader &xml, ews::FindItemResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("FindItemResponseMessage"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("RootFolder"))
+        if (xml.name().MATCH("RootFolder")) {
             rootFolder(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -189,9 +190,9 @@ void folder(QXmlStreamReader &xml, ews::Folder *res)
 {
     Q_ASSERT (xml.name().MATCH("Folder"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("FolderId"))
+        if (xml.name().MATCH("FolderId")) {
             res->folderId = xml.attributes().value("Id").toString();
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -257,9 +258,9 @@ void getFolderResponse(QXmlStreamReader &xml, ews::GetFolderResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("GetFolderResponse"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("ResponseMessages"))
+        if (xml.name().MATCH("ResponseMessages")) {
             responseMessages(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -269,11 +270,11 @@ void getFolderResponseMessage(QXmlStreamReader &xml, ews::GetFolderResponse *res
 {
     Q_ASSERT (xml.name().MATCH("GetFolderResponseMessage"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("ResponseCode"))
+        if (xml.name().MATCH("ResponseCode")) {
             responseCode(xml, res);
-        else if (xml.name().MATCH("Folders"))
+        } else if (xml.name().MATCH("Folders")) {
             folders(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -295,9 +296,9 @@ void items(QXmlStreamReader &xml, ews::FindItemResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("Items"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("CalendarItem"))
+        if (xml.name().MATCH("CalendarItem")) {
             calendarItem(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
@@ -355,9 +356,9 @@ void rootFolder(QXmlStreamReader &xml, ews::FindItemResponse *res)
 {
     Q_ASSERT (xml.name().MATCH("RootFolder"));
     while (xml.readNextStartElement()) {
-        if (xml.name().MATCH("Items"))
+        if (xml.name().MATCH("Items")) {
             items(xml, res);
-        else {
+        } else {
             xml.skipCurrentElement();
         }
     }
