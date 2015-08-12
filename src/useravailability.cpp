@@ -143,6 +143,7 @@ void UserAvailability::updateModel(const QList<ews::CalendarEvent> &data)
     beginResetModel();
     m_data = data;
     endResetModel();
+    emit countChanged(m_data.count());
 }
 
 void UserAvailability::onError(QNetworkReply::NetworkError error)
@@ -178,6 +179,16 @@ QHash<int,QByteArray> UserAvailability::roleNames() const
         { EndTimeRole, "endTime" }
     };
     return _roleNames;
+}
+
+QVariantMap UserAvailability::get(int index) const
+{
+    auto it = m_data.at(index);
+    return QVariantMap {
+        { "busyType", it.busyType },
+        { "startTime", it.startTime },
+        { "endTime", it.endTime }
+    };
 }
 
 } // namespace quickews

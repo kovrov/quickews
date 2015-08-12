@@ -12,6 +12,7 @@ namespace quickews {
 class UserAvailability : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY (int count READ count NOTIFY countChanged)
     Q_PROPERTY (QVariantMap query READ query WRITE setQuery NOTIFY queryChanged)
     enum Roles {
         BusyTypeRole = Qt::UserRole,
@@ -22,6 +23,7 @@ class UserAvailability : public QAbstractListModel
 public:
     UserAvailability(QObject *parent = nullptr);
 
+    int count() const { return m_data.count(); }
     QVariantMap query() const;
     void setQuery(const QVariantMap &query);
 
@@ -29,8 +31,12 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int,QByteArray> roleNames() const override;
 
+    Q_INVOKABLE QVariantMap get(int index) const;
+
+
 signals:
     void queryChanged(const QVariantMap &query) const;
+    void countChanged(int count) const;
 
 private slots:
     void onFinished();
