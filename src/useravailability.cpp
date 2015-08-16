@@ -112,8 +112,14 @@ void UserAvailability::setQuery(const QVariantMap &query)
 
 void UserAvailability::reload()
 {
-    if (m_mailbox.isEmpty() || !m_startDate.isValid() || !m_endDate.isValid())
+    if (m_mailbox.isEmpty() || !m_startDate.isValid() || !m_endDate.isValid()) {
+        m_status = Null;
+        emit statusChanged(m_status);
         return;
+    }
+
+    m_status = Loading;
+    emit statusChanged(m_status);
 
     QSettings settings;
     const QNetworkRequest &req = makeNetworkRequest(settings.value("ews/url").toString());
@@ -132,8 +138,11 @@ void UserAvailability::onFinished()
     ews::GetUserAvailabilityResponse resp (reply->readAll());
     if (resp.response == ews::NoError) {
         updateModel(resp.events);
+        m_status = Ready;
+        emit statusChanged(m_status);
     } else {
-        // TODO: set an error state
+        m_status = Error;
+        emit statusChanged(m_status);
     }
 }
 
@@ -149,6 +158,8 @@ void UserAvailability::updateModel(const QList<ews::CalendarEvent> &data)
 void UserAvailability::onError(QNetworkReply::NetworkError error)
 {
     qWarning("error %d", error);
+    m_status = Error;
+    emit statusChanged(m_status);
 }
 
 int UserAvailability::rowCount(const QModelIndex &parent) const
