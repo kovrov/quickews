@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "parser.h"
 
 #define MATCH(LITERAL) compare(QStringLiteral(LITERAL), Qt::CaseInsensitive) == 0
@@ -52,6 +54,8 @@ ews::GetUserAvailabilityResponse::GetUserAvailabilityResponse(const QByteArray &
     xml.readNextStartElement();
     if (xml.name() == QStringLiteral("Envelope")) {
         parser::envelope(xml, this);
+    } else {
+        throw std::runtime_error("xml parsing error");
     }
 }
 

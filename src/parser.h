@@ -11,7 +11,7 @@ namespace ews {
 
     struct AbstractResponse
     {
-        ews::ResponseCode response;
+        ews::ResponseCode response = NoError;
         virtual ~AbstractResponse() = default;
     };
 

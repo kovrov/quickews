@@ -1,5 +1,6 @@
 #include <QtCore/QSettings>
 #include <QtCore/QXmlStreamWriter>
+#include <QtCore/QTimerEvent>
 
 #include "networkaccessmanager.h"
 #include "parser.h"
@@ -125,9 +126,16 @@ void UserAvailability::reload()
     const QNetworkRequest &req = makeNetworkRequest(settings.value("ews/url").toString());
     const QByteArray &data = GetUserAvailabilityRequest(m_mailbox, m_startDate, m_endDate);
     QNetworkReply *reply = manager()->post(req, data);
-    void (QNetworkReply::*QNetworkReply_error)(QNetworkReply::NetworkError) = &QNetworkReply::error;
-    QObject::connect(reply, QNetworkReply_error, this, &UserAvailability::onError);
     QObject::connect(reply, &QNetworkReply::finished, this, &UserAvailability::onFinished);
+}
+
+void UserAvailability::timerEvent(QTimerEvent *ev)
+{
+    if (m_timerId == ev->timerId()) {
+        killTimer(m_timerId);
+        m_timerId = 0;
+        reload();
+    }
 }
 
 void UserAvailability::onFinished()
@@ -135,14 +143,34 @@ void UserAvailability::onFinished()
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT (reply);
 
-    ews::GetUserAvailabilityResponse resp (reply->readAll());
-    if (resp.response == ews::NoError) {
-        updateModel(resp.events);
-        m_status = Ready;
-        emit statusChanged(m_status);
-    } else {
+    if (m_timerId != 0) {
+        killTimer(m_timerId);
+        m_timerId = 0;
+    }
+
+    if (reply->error() != QNetworkReply::NoError) {
+        qWarning("Network error %d: %s", reply->error(), qPrintable(reply->errorString()));
         m_status = Error;
         emit statusChanged(m_status);
+        m_timerId = startTimer(1000 * 30); // retry in 30 sec
+    } else {
+        try {
+            ews::GetUserAvailabilityResponse resp (reply->readAll());
+            if (resp.response != ews::NoError) {
+                qCritical("Exchange error %d. Giving up.", resp.response);
+                m_status = Error;
+                emit statusChanged(m_status);
+            } else {
+                updateModel(resp.events);
+                m_status = Ready;
+                emit statusChanged(m_status);
+                m_timerId = startTimer(1000 * 60 * 5); // reload in 5 min
+            }
+        } catch (...) {
+            qCritical("Could not parse XML response. Giving up.");
+            m_status = Error;
+            emit statusChanged(m_status);
+        }
     }
 }
 
@@ -153,13 +181,6 @@ void UserAvailability::updateModel(const QList<ews::CalendarEvent> &data)
     m_data = data;
     endResetModel();
     emit countChanged(m_data.count());
-}
-
-void UserAvailability::onError(QNetworkReply::NetworkError error)
-{
-    qWarning("error %d", error);
-    m_status = Error;
-    emit statusChanged(m_status);
 }
 
 int UserAvailability::rowCount(const QModelIndex &parent) const

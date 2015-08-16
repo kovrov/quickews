@@ -43,9 +43,11 @@ signals:
     void countChanged(int count) const;
     void statusChanged(Status) const;
 
+protected:
+    void timerEvent(QTimerEvent *) override;
+
 private slots:
     void onFinished();
-    void onError(QNetworkReply::NetworkError error);
     void reload();
     void updateModel(const QList<ews::CalendarEvent> &data);
 
@@ -54,6 +56,7 @@ private:
     QDateTime m_startDate;
     QDateTime m_endDate;
     Status m_status = Null;
+    int m_timerId = 0;
     QList<ews::CalendarEvent> m_data;
 };
 
