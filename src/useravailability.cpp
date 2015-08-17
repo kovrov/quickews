@@ -142,6 +142,7 @@ void UserAvailability::onFinished()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     Q_ASSERT (reply);
+    reply->deleteLater();
 
     if (m_timerId != 0) {
         killTimer(m_timerId);

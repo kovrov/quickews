@@ -28,7 +28,13 @@ public:
     UserAvailability(QObject *parent = nullptr);
 
     int count() const { return m_data.count(); }
-    QVariantMap query() const;
+    QVariantMap query() const {
+        return QVariantMap {
+            { "mailbox", m_mailbox },
+            { "startDate", m_startDate },
+            { "endDate", m_endDate }};
+    }
+
     void setQuery(const QVariantMap &query);
     Status status() const { return m_status; }
 
